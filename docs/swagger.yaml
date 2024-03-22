@@ -1,0 +1,147 @@
+definitions:
+  GetOrdersResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/dto.OrderWithItems'
+        type: array
+      message:
+        example: success
+        type: string
+      statusCode:
+        example: 200
+        type: integer
+    type: object
+  dto.GetItemResponseDto:
+    properties:
+      createdAt:
+        type: string
+      description:
+        type: string
+      itemCode:
+        type: string
+      itemId:
+        type: integer
+      orderId:
+        type: integer
+      quantity:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  dto.NewItemRequestDto:
+    properties:
+      description:
+        example: BMW
+        type: string
+      itemCode:
+        example: "889"
+        type: string
+      quantity:
+        example: 13
+        type: integer
+    type: object
+  dto.NewOrderRequestDto:
+    properties:
+      customerName:
+        example: John Doe
+        type: string
+      items:
+        items:
+          $ref: '#/definitions/dto.NewItemRequestDto'
+        type: array
+      orderedAt:
+        example: "2023-07-10T21:21:46+00:00"
+        type: string
+    type: object
+  dto.NewOrderResponseDto:
+    properties:
+      message:
+        example: success
+        type: string
+      statusCode:
+        example: 200
+        type: integer
+    type: object
+  dto.OrderWithItems:
+    properties:
+      createdAt:
+        type: string
+      customerName:
+        type: string
+      items:
+        items:
+          $ref: '#/definitions/dto.GetItemResponseDto'
+        type: array
+      orderId:
+        type: integer
+      orderedAt:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /orders:
+    get:
+      description: Get Order with Item Data
+      operationId: get-orders-with-items
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GetOrdersResponse'
+      tags:
+      - orders
+    post:
+      consumes:
+      - application/json
+      description: Create Order Data
+      operationId: create-new-order
+      parameters:
+      - description: request body json
+        in: body
+        name: RequestBody
+        required: true
+        schema:
+          $ref: '#/definitions/dto.NewOrderRequestDto'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.NewOrderResponseDto'
+      tags:
+      - orders
+  /orders/{orderId}:
+    put:
+      consumes:
+      - application/json
+      description: Update Order Data By Id
+      operationId: update-order
+      parameters:
+      - description: order's id
+        in: path
+        name: orderId
+        required: true
+        type: integer
+      - description: request body json
+        in: body
+        name: RequestBody
+        required: true
+        schema:
+          $ref: '#/definitions/dto.NewOrderRequestDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.NewOrderResponseDto'
+      tags:
+      - orders
+swagger: "2.0"
